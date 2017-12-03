@@ -40,7 +40,11 @@ void setup() {
     while (!Serial) {}
   }
   clock.begin();
-  sevseg.begin(COMMON_ANODE, 4, [anode1, anode2, anode3, anode4], [segA, segB, segC, segD, segE, segF, segG], true, false, false);
+
+  byte segment_array[] = {segA, segB, segC, segD, segE, segF, segG, 2};
+  byte digit_array[] = {anode1, anode2, anode3, anode4};
+  
+  sevseg.begin((byte)COMMON_ANODE, (byte)4, digit_array, segment_array, true, false, false);
 
   clock.setDateTime(__DATE__, __TIME__);
 }
