@@ -56,6 +56,11 @@ void loop() {
   int hour = dt.hour;
   int minute = dt.minute;
   //update brightness based on time
+  if (hour >= 22 || hour <= 7) {
+    sevseg.setBrightness(60);
+  } else {
+    sevseg.setBrightness(90);
+  }
   //display time
   sevseg.setNumber(100 * hour + minute, 0);
   sevseg.refreshDisplay();
