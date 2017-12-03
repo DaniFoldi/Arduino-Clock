@@ -3,6 +3,8 @@
 #include <DS3231.h>
 
 #define DEBUG 0
+//OPTIONAL SERIAL DEBUG MODE
+//NOT RECOMMENDED, SLOWS DOWN DISPLAY UPDATES
 
 const int button1_pin = 4;
 const int button2_pin = 3;
