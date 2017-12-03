@@ -28,12 +28,18 @@ const int anode4 = A0;
  * 
  */
 
+DS3231 clock;
+SevSeg sevseg;
+
 void setup() {
   if (DEBUG) {
     Serial.begin(9600);
     while (!Serial) {}
   }
+  clock.begin();
+  sevseg.begin(COMMON_ANODE, 4, [anode1, anode2, anode3, anode4], [segA, segB, segC, segD, segE, segF, segG], true, false, false);
 
+  clock.setDateTime(__DATE__, __TIME__);
 }
 
 void loop() {
