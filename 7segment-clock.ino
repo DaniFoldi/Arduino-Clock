@@ -46,7 +46,7 @@ void setup() {
   byte segment_array[] = {segA, segB, segC, segD, segE, segF, segG, 2};
   byte digit_array[] = {anode1, anode2, anode3, anode4};
   
-  sevseg.begin((byte)COMMON_ANODE, (byte)4, digit_array, segment_array, true, false, false);
+  sevseg.begin((byte)COMMON_ANODE, (byte)4, digit_array, segment_array, true, false, true);
 
   clock.setDateTime(__DATE__, __TIME__);
 }
