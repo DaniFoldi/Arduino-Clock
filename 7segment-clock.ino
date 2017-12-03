@@ -50,10 +50,13 @@ void setup() {
 }
 
 void loop() {
+  RTCDateTime dt;
   //check for setup buttons
   //get time
-  
+  int hour = dt.hour;
+  int minute = dt.minute;
   //update brightness based on time
   //display time
+  sevseg.setNumber(100 * hour + minute, 0);
   sevseg.refreshDisplay();
 }
