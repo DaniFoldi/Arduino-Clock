@@ -20,6 +20,9 @@ const int anode2 = A2;
 const int anode3 = A1;
 const int anode4 = A0;
 
+bool button1_last_pressed = false;
+bool button2_last_pressed = false;
+
 /*
  * LIBRARIES NEEDED:
  * 
@@ -43,5 +46,10 @@ void setup() {
 }
 
 void loop() {
-
+  //check for setup buttons
+  //get time
+  
+  //update brightness based on time
+  //display time
+  sevseg.refreshDisplay();
 }
