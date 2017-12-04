@@ -36,9 +36,13 @@ bool button2_last_pressed = false;
 DS3231 clock;
 SevSeg sevseg;
 
+RTCDateTime dt;
+
+int lastCheck = 0;
+
 void setup() {
   if (DEBUG) {
-    Serial.begin(9600);
+    Serial.begin(19200);
     while (!Serial) {}
   }
   clock.begin();
@@ -52,7 +56,12 @@ void setup() {
 }
 
 void loop() {
-  RTCDateTime dt;
+  //only check for time once a second
+  //accurate, but a higher FPS can be achieved
+  if (millis() - lastCheck > 1000) {
+    dt = clock.getDateTime();
+    lastCheck = millis();  
+  }
   //check for setup buttons
   //get time
   int hour = dt.hour;
