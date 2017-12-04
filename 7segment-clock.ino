@@ -1,5 +1,7 @@
 #include <SevSeg.h>
 #include <Wire.h>
+#include <Eeprom24C32_64.h>
+#include <EEPROM.h>
 #include <DS3231.h>
 
 #define DEBUG 0
@@ -25,6 +27,9 @@ const byte anode4 = A0;
 bool button1_last_pressed = false;
 bool button2_last_pressed = false;
 
+const int internal_code = 123;
+const int external_code = 67;
+
 /*
  * LIBRARIES NEEDED:
  * 
@@ -35,6 +40,7 @@ bool button2_last_pressed = false;
 
 DS3231 clock;
 SevSeg sevseg;
+Eeprom24C32_64 eeprom(0x50);
 
 RTCDateTime dt;
 
@@ -46,13 +52,26 @@ void setup() {
     while (!Serial) {}
   }
   clock.begin();
+  eeprom.initialize();
 
   byte segment_array[] = {segA, segB, segC, segD, segE, segF, segG, 2};
   byte digit_array[] = {anode1, anode2, anode3, anode4};
   
   sevseg.begin((byte)COMMON_CATHODE, (byte)4, digit_array, segment_array, true, false, true);
 
-  clock.setDateTime(__DATE__, __TIME__);
+  //Check for magic code in built-in and I2C eeprom
+  //read does not shorten its lifecycle
+  int internal_value = EEPROM.read(16);
+  int external_value = eeprom.readByte(20);
+
+  if (internal_value != internal_code || external_value != external_code) {
+    //change any of the two values to force a time update
+    clock.setDateTime(__DATE__, __TIME__);
+
+    EEPROM.write(16, internal_code);
+    eeprom.writeByte(20, external_code);
+  }
+
 }
 
 void loop() {
