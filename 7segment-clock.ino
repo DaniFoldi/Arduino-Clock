@@ -73,6 +73,11 @@ void loop() {
     sevseg.setBrightness(90);
   }
   //display time
+  if (DEBUG) {
+    Serial.print(hour);
+    Serial.print(" ");
+    Serial.println(minute);
+  }
   sevseg.setNumber(100 * hour + minute, 0);
   sevseg.refreshDisplay();
 }
