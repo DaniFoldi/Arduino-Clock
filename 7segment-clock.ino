@@ -4,7 +4,7 @@
 #include <EEPROM.h>
 #include <DS3231.h>
 
-#define DEBUG 0
+#define DEBUG 1
 //OPTIONAL SERIAL DEBUG MODE
 //NOT RECOMMENDED, SLOWS DOWN DISPLAY UPDATES
 
@@ -40,7 +40,7 @@ const int external_code = 67;
 
 DS3231 clock;
 SevSeg sevseg;
-Eeprom24C32_64 eeprom(0x50);
+Eeprom24C32_64 eeprom(0x57);
 
 RTCDateTime dt;
 
@@ -71,6 +71,17 @@ void setup() {
     EEPROM.write(16, internal_code);
     eeprom.writeByte(20, external_code);
   }
+
+  if (DEBUG) {
+    Serial.println(internal_value);
+    Serial.println(internal_code);
+    Serial.println(external_value);
+    Serial.println(external_code);
+  }
+
+  //perform an initial reading to avoid displaying random numbers
+  dt = clock.getDateTime();
+  lastCheck = millis();
 
 }
 
