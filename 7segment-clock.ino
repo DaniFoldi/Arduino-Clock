@@ -27,8 +27,8 @@ const byte anode4 = A0;
 bool button1_last_pressed = false;
 bool button2_last_pressed = false;
 
-const int internal_code = 123;
-const int external_code = 67;
+const byte internal_code = 123;
+const byte external_code = 45;
 
 /*
  * LIBRARIES NEEDED:
