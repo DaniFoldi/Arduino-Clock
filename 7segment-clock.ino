@@ -44,7 +44,7 @@ Eeprom24C32_64 eeprom(0x57);
 
 RTCDateTime dt;
 
-int lastCheck = 0;
+long long lastCheck = 0;
 
 void setup() {
   if (DEBUG) {
@@ -88,6 +88,9 @@ void setup() {
 void loop() {
   //only check for time once a second
   //accurate, but a higher FPS can be achieved
+  if (millis() < 0 && lastCheck > 0) {
+    lastCheck = millis();
+  }
   if (millis() - lastCheck > 1000) {
     dt = clock.getDateTime();
     lastCheck = millis();  
