@@ -1,10 +1,10 @@
-#include <SevSeg.h>
 #include <Wire.h>
+#include <SevSeg.h>
 #include <Eeprom24C32_64.h>
 #include <EEPROM.h>
 #include <DS3231.h>
 
-#define DEBUG 1
+#define DEBUG 0
 //OPTIONAL SERIAL DEBUG MODE
 //NOT RECOMMENDED, SLOWS DOWN DISPLAY UPDATES
 
@@ -27,8 +27,8 @@ const byte anode4 = A0;
 bool button1_last_pressed = false;
 bool button2_last_pressed = false;
 
-const byte internal_code = 12;
-const byte external_code = 34;
+const byte internal_code = 123;
+const byte external_code = 456;
 
 /*
  * LIBRARIES NEEDED:
@@ -47,10 +47,9 @@ RTCDateTime dt;
 long long lastCheck = 0;
 
 void setup() {
-  if (DEBUG) {
-    Serial.begin(19200);
-    while (!Serial) {}
-  }
+  Serial.begin(9600);
+  while (!Serial) {}
+  
   clock.begin();
   eeprom.initialize();
 
@@ -61,11 +60,11 @@ void setup() {
 
   //Check for magic code in built-in and I2C eeprom
   //read does not shorten its lifecycle
+  //change any of the two values above to force a time update
   int internal_value = EEPROM.read(16);
   int external_value = eeprom.readByte(20);
 
   if (internal_value != internal_code || external_value != external_code) {
-    //change any of the two values to force a time update
     clock.setDateTime(__DATE__, __TIME__);
 
     EEPROM.write(16, internal_code);
@@ -91,7 +90,7 @@ void loop() {
   if (millis() < 0 && lastCheck > 0) {
     lastCheck = millis();
   }
-  if (millis() - lastCheck > 1000) {
+  if (millis() > lastCheck + 1000) {
     dt = clock.getDateTime();
     lastCheck = millis();  
   }
@@ -101,7 +100,7 @@ void loop() {
   int minute = dt.minute;
   //update brightness based on time
   if (hour >= 22 || hour <= 7) {
-    sevseg.setBrightness(60);
+    sevseg.setBrightness(50);
   } else {
     sevseg.setBrightness(90);
   }
@@ -113,4 +112,13 @@ void loop() {
   }
   sevseg.setNumber(100 * hour + minute, 0);
   sevseg.refreshDisplay();
+  //update time
+  if (Serial.available > 0) {
+    byte yy100 = Serial.read();
+    byte yy = Serial.read();
+    byte mm = Serial.read();
+    byte hh = Serial.read();
+    byte ii = Serial.read();
+    byte ss = Serial.read();
+    clock.setDateTime(yy100 * 100 + yy, mm, dd, hh, ii, ss);
 }
